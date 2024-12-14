@@ -1,6 +1,6 @@
 import pandas as pd
 
-excel_file_path = "../data/BBDDFPFcodificada.xlsx"
+excel_file_path = "C:/Users/USER/Desktop/Personal/Bits/FibroPred-Challenge/data/bbddfpfcodificada.xlsx"
 
 df = pd.read_excel(excel_file_path)
 
