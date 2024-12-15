@@ -49,15 +49,18 @@ def create_app():
             print(exp_dic)
 
 
-            # Pasamos el resultado al template results.html
-            # results.html podría mostrar la predicción y parte de la explicación
-            results_html = render_template(
-                'results.html', 
-                prediction=prediction, 
-                explanation=exp_dic
-            )
-            return results_html, 200
-        
+            # Ruta al archivo PNG en la carpeta `static`
+            plot_url = '/static/patient.png'
+
+            # Explicación de ejemplo
+            explanation = [
+                "El modelo predice un riesgo bajo de progresión en los próximos 5 años.",
+                "Los factores más influyentes fueron la edad y la FVC.",
+                "El valor de DLCO también contribuyó al pronóstico positivo."
+            ]
+            
+            return render_template('results.html', plot_url=plot_url, explanation=explanation)
+            
         
         else:
             return "ERROR: El archivo debe ser un CSV.", 400
@@ -95,14 +98,18 @@ def create_app():
         exp_dic = agent.explain_diagnosis()
 
         print(exp_dic)
-        
-        # results_html = render_template(
-        #     'results.html', 
-        #     prediction=prediction, 
-        #     explanation=exp_dic
-        # )
 
-        return None , 200
+        # Ruta al archivo PNG en la carpeta `static`
+        plot_url = '/static/diagnosis_plot.png'
+
+        # Explicación de ejemplo
+        explanation = [
+            "El modelo predice un riesgo bajo de progresión en los próximos 5 años.",
+            "Los factores más influyentes fueron la edad y la FVC.",
+            "El valor de DLCO también contribuyó al pronóstico positivo."
+        ]
+        
+        return render_template('results.html', plot_url=plot_url, explanation=explanation)
 
 
     return app

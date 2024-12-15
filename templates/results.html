@@ -2,18 +2,69 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Resultados</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resultados del Diagnóstico</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        main {
+            flex: 1;
+            padding: 2rem;
+        }
+        .plot-container {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .explanation-list {
+            list-style-type: disc;
+            padding-left: 1.5rem;
+        }
+        .btn-back {
+            margin-top: 2rem;
+            display: block;
+            width: 100%;
+            max-width: 200px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+    </style>
 </head>
-<body class="bg-light">
-    <div class="container py-5">
-        <h1 class="mb-4">Resultados del Análisis</h1>
-        <p><strong>Predicción:</strong> {{ prediction }}</p>
-        <h2>Explicación</h2>
-        <p>A continuación se muestra la explicación basada en SHAP:</p>
-        <pre>{{ explanation | tojson(indent=2) }}</pre>
-        <!-- Muestra la explicación con SHAP values y la info adicional -->
-    </div>
+<body>
+    <header class="bg-primary text-white py-4">
+        <div class="container text-center">
+            <h1 class="display-4">Resultados del Diagnóstico</h1>
+            <p class="lead">Aquí puedes visualizar tu diagnóstico y su explicación.</p>
+        </div>
+    </header>
+    <main class="container">
+        <!-- Contenedor del gráfico -->
+        <div class="plot-container">
+            <h3>Visualización del Diagnóstico</h3>
+            <img src="{{ plot_url }}" alt="Gráfico del diagnóstico" class="img-fluid rounded shadow">
+        </div>
+
+        <!-- Lista con la explicación -->
+        <div class="explanation-container">
+            <h3>Explicación del Diagnóstico</h3>
+            <ul class="explanation-list">
+                {% for item in explanation %}
+                <li>{{ item }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <!-- Botón para volver al inicio -->
+        <a href="/" class="btn btn-primary btn-lg btn-back">Volver al Inicio</a>
+    </main>
+    <footer class="bg-light text-center py-3">
+        <p class="mb-0">© 2024 Diagnóstico de Fibrosis. Todos los derechos reservados.</p>
+    </footer>
+    <!-- Bootstrap JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
