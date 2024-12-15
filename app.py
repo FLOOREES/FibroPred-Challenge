@@ -46,18 +46,16 @@ def create_app():
             agent = MedicalAgent(db_path=filepath, documents_path='documents',latent=False)
             exp_dic = agent.explain_diagnosis()
 
-            print(exp_dic)
-
+            #print(exp_dic)
+            l=[]
+            for key in exp_dic:
+                l.append(exp_dic[key])
 
             # Ruta al archivo PNG en la carpeta `static`
             plot_url = '/static/patient.png'
 
             # Explicación de ejemplo
-            explanation = [
-                "El modelo predice un riesgo bajo de progresión en los próximos 5 años.",
-                "Los factores más influyentes fueron la edad y la FVC.",
-                "El valor de DLCO también contribuyó al pronóstico positivo."
-            ]
+            explanation = l
             
             return render_template('results.html', plot_url=plot_url, explanation=explanation)
             
@@ -96,18 +94,14 @@ def create_app():
 
         agent = MedicalAgent(db_path='uploads/latent_data.csv', documents_path='./documents',latent=True)
         exp_dic = agent.explain_diagnosis()
-
-        print(exp_dic)
-
+        l=[]
+        for key in exp_dic:
+            l.append(exp_dic[key])
         # Ruta al archivo PNG en la carpeta `static`
         plot_url = '/static/diagnosis_plot.png'
 
         # Explicación de ejemplo
-        explanation = [
-            "El modelo predice un riesgo bajo de progresión en los próximos 5 años.",
-            "Los factores más influyentes fueron la edad y la FVC.",
-            "El valor de DLCO también contribuyó al pronóstico positivo."
-        ]
+        explanation = l
         
         return render_template('results.html', plot_url=plot_url, explanation=explanation)
 
