@@ -59,11 +59,13 @@ class MedicalAgent:
 
         :return: Dictionary of LightGBM models.
         """
-        assert os.path.exists('data/models/death_model_y0.txt'), "El archivo death_model_y0.txt no existe."
-        assert os.path.exists('data/models/prog_model_y0.txt'), "El archivo prog_model_y0.txt no existe."
-
+        assert os.path.exists('models/death_model_y0.txt'), "El archivo death_model_y0.txt no existe."
+        assert os.path.exists('models/prog_model_y0.txt'), "El archivo prog_model_y0.txt no existe."
+        b1 = lgb.Booster(model_file='src/model_weights/death_model_y0.txt')
+        b2 = lgb.Booster(model_file='src/model_weights/prog_model_y0.txt')
+        print('juan')
         models = {
-            'year0': [lgb.Booster(model_file='models/death_model_y0.txt'),lgb.Booster(model_file='models/prog_model_y0.txt')],
+            'year0': [b1,b2]
         }
 
         if self.year == 0 and self.latent == False:
