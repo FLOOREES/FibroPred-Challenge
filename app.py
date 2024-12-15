@@ -105,7 +105,15 @@ def create_app():
             'pirfenidone': pirfenidone_binary
         }
 
-        print(user_data)
+        User = pd.DataFrame(user_data, index=[0]).to_csv('data/user_data.csv', index=False)
+
+        # upload User in csv format 
+        User.to_csv('uploads/latent_data.csv', index=False)
+        
+
+        
+        # Inicializar el agente médico
+        agent = MedicalAgent(db_path='./data/db.csv', documents_path='./data/documents
 
         # Aquí podrías procesar los datos con tu modelo
         # Por ejemplo:
