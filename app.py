@@ -22,8 +22,6 @@ def create_app():
     def questionnaire():
         return render_template('questionnaire.html')  # Página del cuestionario
     
-
-
     ##################### modo CSV #####################
 
     @app.route('/upload-csv', methods=['GET'])
