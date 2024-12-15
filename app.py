@@ -84,36 +84,38 @@ def create_app():
             return "ERROR: El archivo debe ser un CSV.", 400
         
 
-        ####################### modo cuestionario #######################
+    ####################### modo cuestionario #######################
 
-        @app.route('/submit-questionnaire', methods=['POST'])
-        def submit_questionnaire():
-            # Obtener los datos enviados por el formulario
-            dlco = request.form.get('dlco', type=float)  # DLCO (%) at Diagnosis
-            age = request.form.get('age', type=int)  # Age at Diagnosis
-            fvc = request.form.get('fvc', type=float)  # FVC (%) at Diagnosis
-            final_diagnosis = request.form.get('final_diagnosis', type=int)  # Final Diagnosis
-            pirfenidone = request.form.get('pirfenidone')  # Pirfenidone (Binaria: "si" o "no")
+    @app.route('/submit-questionnaire', methods=['POST'])
+    def submit_questionnaire():
+        # Obtener los datos enviados por el formulario
+        dlco = request.form.get('dlco', type=float)  # DLCO (%) at Diagnosis
+        age = request.form.get('age', type=int)  # Age at Diagnosis
+        fvc = request.form.get('fvc', type=float)  # FVC (%) at Diagnosis
+        final_diagnosis = request.form.get('final_diagnosis', type=int)  # Final Diagnosis
+        pirfenidone = request.form.get('pirfenidone')  # Pirfenidone (Binaria: "si" o "no")
 
-            # Convertir el valor binario de Pirfenidone a 0 o 1
-            pirfenidone_binary = 1 if pirfenidone == "si" else 0
+        # Convertir el valor binario de Pirfenidone a 0 o 1
+        pirfenidone_binary = 1 if pirfenidone == "si" else 0
 
-            # Guardar los datos en variables o procesarlos
-            user_data = {
-                'dlco': dlco,
-                'age': age,
-                'fvc': fvc,
-                'final_diagnosis': final_diagnosis,
-                'pirfenidone': pirfenidone_binary
-            }
+        # Guardar los datos en variables o procesarlos
+        user_data = {
+            'dlco': dlco,
+            'age': age,
+            'fvc': fvc,
+            'final_diagnosis': final_diagnosis,
+            'pirfenidone': pirfenidone_binary
+        }
 
-            # Aquí podrías procesar los datos con tu modelo
-            # Por ejemplo:
-            # prediction = agent.predict_diagnosis(user_data, 'diabetes_model')
+        print(user_data)
 
-            # Renderizar una página de resultados o redirigir a otra ruta
-            return render_template('questionnaire_results.html', user_data=user_data)
-    
+        # Aquí podrías procesar los datos con tu modelo
+        # Por ejemplo:
+        # prediction = agent.predict_diagnosis(user_data, 'diabetes_model')
+
+        # Renderizar una página de resultados o redirigir a otra ruta
+        return render_template('questionnaire_results.html', user_data=user_data)
+
 
     return app
 
