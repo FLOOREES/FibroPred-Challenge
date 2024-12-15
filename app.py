@@ -43,7 +43,7 @@ def create_app():
             file.save(filepath)  # Guarda el archivo en el servidor
 
             
-            agent = MedicalAgent(db_path=filepath, documents_path='./data/documents',latent=False)
+            agent = MedicalAgent(db_path=filepath, documents_path='documents',latent=False)
             exp_dic = agent.explain_diagnosis()
 
             print(exp_dic)
