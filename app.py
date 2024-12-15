@@ -54,7 +54,7 @@ def create_app():
             results_html = render_template(
                 'results.html', 
                 prediction=prediction, 
-                explanation=explanation
+                explanation=exp_dic
             )
             return results_html, 200
         
@@ -90,15 +90,16 @@ def create_app():
 
         # upload User in csv format 
         User.to_csv('uploads/latent_data.csv', index=False)
-        
 
         agent = MedicalAgent(db_path='uploads/latent_data.csv', documents_path='./data/documents',latent=True)
+        exp_dic = agent.explain_diagnosis()
 
-
+        print(exp_dic)
+        
         results_html = render_template(
             'results.html', 
             prediction=prediction, 
-            explanation=explanation
+            explanation=exp_dic
         )
 
         return results_html, 200
