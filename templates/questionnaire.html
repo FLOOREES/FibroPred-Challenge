@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cuestionario de Diagnóstico</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        main {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .card {
+            width: 30rem;
+            padding: 2rem;
+        }
+    </style>
+</head>
+<body>
+    <header class="bg-primary text-white py-4">
+        <div class="container text-center">
+            <h1 class="display-4">Cuestionario de Diagnóstico</h1>
+            <p class="lead">Introduce los datos solicitados para continuar con el diagnóstico.</p>
+        </div>
+    </header>
+    <main>
+        <div class="card shadow-lg">
+            <div class="card-body">
+                <form action="/submit-questionnaire" method="POST">
+                    <div class="mb-3">
+                        <label for="dlco" class="form-label">DLCO (%) at Diagnosis</label>
+                        <input type="number" class="form-control" id="dlco" name="dlco" placeholder="Ej: 80" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="age" class="form-label">Age at Diagnosis</label>
+                        <input type="number" class="form-control" id="age" name="age" placeholder="Ej: 45" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="fvc" class="form-label">FVC (%) at Diagnosis</label>
+                        <input type="number" class="form-control" id="fvc" name="fvc" placeholder="Ej: 70" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="final_diagnosis" class="form-label">Final Diagnosis</label>
+                        <input type="number" class="form-control" id="final_diagnosis" name="final_diagnosis" placeholder="Ej: 1" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Pirfenidone</label>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" id="pirfenidone_si" name="pirfenidone" value="si" required>
+                            <label class="form-check-label" for="pirfenidone_si">Sí</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" id="pirfenidone_no" name="pirfenidone" value="no" required>
+                            <label class="form-check-label" for="pirfenidone_no">No</label>
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-primary btn-lg">Enviar Cuestionario</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+    <footer class="bg-light text-center py-3">
+        <p class="mb-0">© 2024 Diagnóstico de Fibrosis. Todos los derechos reservados.</p>
+    </footer>
+    <!-- Bootstrap JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
