@@ -49,7 +49,7 @@ def create_app():
             #print(exp_dic)
             l=[]
             for key in exp_dic:
-                l.append(exp_dic[key])
+                l.append(exp_dic["death_prediction"],exp_dic["prog_prediction"], exp_dic["additional_info"])
 
             # Ruta al archivo PNG en la carpeta `static`
             plot_url = '/static/patient.png'
