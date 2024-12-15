@@ -15,6 +15,7 @@
         main {
             flex: 1;
             padding: 2rem;
+            overflow-y: auto; /* Permite el scroll vertical si el contenido es grande */
         }
         .plot-container {
             text-align: center;
@@ -23,6 +24,8 @@
         .explanation-list {
             list-style-type: disc;
             padding-left: 1.5rem;
+            max-height: 60vh; /* Limita el alto de la lista */
+            overflow-y: auto; /* Scroll solo para la lista si es muy larga */
         }
         .btn-back {
             margin-top: 2rem;
