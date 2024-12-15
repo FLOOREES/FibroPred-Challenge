@@ -26,7 +26,7 @@ class MedicalAgent:
         :param db_path: Path to the user data CSV file.
         :param documents_path: Path to the directory containing documents for the RAG system.
         """
-        self.data = Data(db_path)
+        self.data = Data(db_path).data
 
         self.year = self._get_year()
 
@@ -34,7 +34,7 @@ class MedicalAgent:
 
         self.llm = Ollama(model='llama3.2')
 
-        self.models = self._load_models()
+        self.model = self._load_models()
 
         self.retriever = self._initialize_retriever(documents_path) if documents_path else None
 
@@ -119,22 +119,30 @@ class MedicalAgent:
         )
         return agent
 
-    def predict_diagnosis(self, user_data, model_name):
+    def predict_diagnosis(self):
         """
-        Predicts a diagnosis based on user data using a LightGBM model.
+        Predicts a diagnosis based on the current data in self.data using the appropriate LightGBM model.
 
-        :param user_data: Dictionary with relevant user information.
-        :param model_name: Name of the LightGBM model to use.
         :return: Predicted diagnosis.
         """
-        model = self.lightgbm_models.get(model_name)
-        if not model:
-            raise ValueError(f"Model {model_name} not found.")
-        data = np.array([user_data[key] for key in sorted(user_data.keys())]).reshape(1, -1)
-        diagnosis = model.predict(data)
-        return diagnosis[0]
+        if not self.model:
+            raise ValueError("No model is loaded for the current year and latent state.")
 
-    def explain_diagnosis(self, user_data, model_name):
+        # Ensure that self.data contains exactly one row of data
+        if self.data.shape[0] != 1:
+            raise ValueError("The data should contain exactly one row for prediction.")
+
+        # Prepare the data for prediction
+        self.X = self.data.values  # Convert the DataFrame row to a NumPy array
+        self.death_model = self.model[0]
+        self.prog_model = self.model[1]
+        diagnosis = self.death_model.predict(self.X)
+        prognosis = self.prog_model.predict(self.X)
+
+        # Return the first (and only) prediction
+        return diagnosis, prognosis
+
+    def explain_diagnosis(self):
         """
         Provides a detailed explanation of the diagnosis using SHAP and the LLM.
 
@@ -143,40 +151,53 @@ class MedicalAgent:
         :return: Explanation of the diagnosis.
         """
         # Predict the diagnosis
-        prediction = self.predict_diagnosis(user_data, model_name)
-
-        # Load the corresponding LightGBM model
-        model = self.lightgbm_models.get(model_name)
-        if not model:
-            raise ValueError(f"Model {model_name} not found.")
+        death_prediction, progressive_prediction = self.predict_diagnosis()
 
         # Prepare data for SHAP
-        data = np.array([user_data[key] for key in sorted(user_data.keys())]).reshape(1, -1)
-        feature_names = sorted(user_data.keys())
+        if not self.model:
+            raise ValueError("No model is loaded for SHAP explanations.")
 
-        # Initialize SHAP TreeExplainer
-        explainer = shap.TreeExplainer(model)
-        shap_values = explainer.shap_values(data)
+        # Initialize SHAP TreeExplainers for both models
+        death_explainer = shap.TreeExplainer(self.death_model)
+        prog_explainer = shap.TreeExplainer(self.prog_model)
 
-        # Generate SHAP explanation
-        shap_explanation = {}
-        for feature, value, shap_value in zip(feature_names, data[0], shap_values[0]):
-            shap_explanation[feature] = {
-                'value': value,
-                'impact': shap_value
+        # Compute SHAP values
+        death_shap_values = death_explainer.shap_values(self.X)
+        prog_shap_values = prog_explainer.shap_values(self.X)
+
+        # Generate SHAP explanations for the diagnosis model
+        feature_names = self.data.columns
+        death_shap_explanation = {
+            feature: {
+                'value': self.X[0][i],
+                'impact': death_shap_values[0][i]
             }
+            for i, feature in enumerate(feature_names)
+        }
 
-        # Retrieve additional information from explicability.txt using RAG
+        # Generate SHAP explanations for the prognosis model
+        prog_shap_explanation = {
+            feature: {
+                'value': self.X[0][i],
+                'impact': prog_shap_values[0][i]
+            }
+            for i, feature in enumerate(feature_names)
+        }
+
+        # Retrieve additional information using RAG
         if self.retriever:
-            query = f"Explain the diagnosis {prediction} considering the following SHAP explanation: {', '.join(feature_names)}."
+            query = (
+                f"Explain the death prediction ({death_prediction}) and prognosis ({progressive_prediction}) "
+                f"considering the following SHAP explanations for the features: {', '.join(feature_names)}."
+            )
             additional_info = self.answer_medical_question(query)
-        else:
-            additional_info = "No additional information available."
 
-        # Combine SHAP explanation with additional information
+        # Combine SHAP explanations and additional information into the output
         explanation = {
-            'prediction': prediction,
-            'shap_explanation': shap_explanation,
+            'death_prediction': death_prediction,
+            'prog_prediction': progressive_prediction,
+            'death_shap_explanation': death_shap_explanation,
+            'prog_shap_explanation': prog_shap_explanation,
             'additional_info': additional_info
         }
 
