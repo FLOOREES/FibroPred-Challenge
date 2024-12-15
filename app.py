@@ -43,10 +43,10 @@ def create_app():
             file.save(filepath)  # Guarda el archivo en el servidor
 
             
-            # agent = MedicalAgent(db_path=filepath, documents_path='documents',latent=False)
-            # exp_dic = agent.explain_diagnosis()
+            agent = MedicalAgent(db_path=filepath, documents_path='documents',latent=False)
+            exp_dic = agent.explain_diagnosis()
 
-            #print(exp_dic)
+            print(exp_dic)
             l=[]
             l.append("Death Probability: " + str(exp_dic["death_prediction"]))
             l.append("Progressive Desease Probability: " + str(exp_dic["prog_prediction"]))
