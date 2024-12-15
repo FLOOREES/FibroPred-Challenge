@@ -13,6 +13,7 @@ import shap
 
 from dotenv import load_dotenv
 import os
+import matplotlib.pyplot as plt
 
 load_dotenv()
 
@@ -152,41 +153,128 @@ class MedicalAgent:
         :return: Explanation of the diagnosis.
         """
         # Predict the diagnosis
-        death_prediction, progressive_prediction = self.predict_diagnosis()
+        # death_prediction, progressive_prediction = self.predict_diagnosis()
 
-        # Prepare data for SHAP
-        if not self.model:
-            raise ValueError("No model is loaded for SHAP explanations.")
+        # # Prepare data for SHAP
+        # if not self.model:
+        #     raise ValueError("No model is loaded for SHAP explanations.")
 
-        # Initialize SHAP TreeExplainers for both models
-        death_explainer = shap.TreeExplainer(self.death_model)
-        prog_explainer = shap.TreeExplainer(self.prog_model)
+        # # Initialize SHAP TreeExplainers for both models
+        # death_explainer = shap.TreeExplainer(self.death_model)
+        # prog_explainer = shap.TreeExplainer(self.prog_model)
 
-        # Compute SHAP values
-        death_shap_values = death_explainer.shap_values(self.X)
-        prog_shap_values = prog_explainer.shap_values(self.X)
+        # # Compute SHAP values
+        # death_shap_values = death_explainer.shap_values(self.X)
+        # prog_shap_values = prog_explainer.shap_values(self.X)
 
-        # Generate SHAP explanations for the diagnosis model
-        feature_names = self.data.columns
-        death_shap_explanation = {
-            feature: {
-                'value': self.X[0][i],
-                'impact': death_shap_values[0][i]
-            }
-            for i, feature in enumerate(feature_names)
-        }
+        # # Generate SHAP explanations for the diagnosis model
+        # feature_names = self.data.columns
+        # death_shap_explanation = {
+        #     feature: {
+        #         'value': self.X[0][i],
+        #         'impact': death_shap_values[0][i]
+        #     }
+        #     for i, feature in enumerate(feature_names)
+        # }
 
-        # Generate SHAP explanations for the prognosis model
-        prog_shap_explanation = {
-            feature: {
-                'value': self.X[0][i],
-                'impact': prog_shap_values[0][i]
-            }
-            for i, feature in enumerate(feature_names)
-        }
+        # # Generate SHAP explanations for the prognosis model
+        # prog_shap_explanation = {
+        #     feature: {
+        #         'value': self.X[0][i],
+        #         'impact': prog_shap_values[0][i]
+        #     }
+        #     for i, feature in enumerate(feature_names)
+        # }
 
-        # Retrieve additional information using RAG
-        #if self.retriever:
+    # Load the pre-trained LightGBM models
+   
+    # Function to compute SHAP explanations and probabilities for a given model
+    def get_shap_explanation(self, model, label):
+        """
+        Generates SHAP explanations and calculates prediction probabilities for a specific model.
+
+        Args:
+            explainer (shap.Explainer): SHAP TreeExplainer for the model.
+            instance (pd.DataFrame): Input data (single patient example).
+            label (str): Label for the prediction (e.g., "Death" or "Progressive Disease").
+
+        Returns:
+            tuple: SHAP explanation text and prediction probability.
+        """
+        instance = self.data
+        if model == "death":
+            explainer = shap.TreeExplainer(self.death_model)
+        else:
+            explainer = shap.TreeExplainer(self.prog_model)
+
+        shap_values = explainer.shap_values(self.data)  # Compute SHAP values
+        shap_values_instance = shap.Explanation(
+            values=shap_values[1][0],  # SHAP values for the positive class
+            base_values=explainer.expected_value[1],  # Base value for the positive class
+            data=instance.iloc[0]  # Input features for the patient
+        )
+        
+        # Plot and save the SHAP waterfall plot
+        shap.plots.waterfall(shap_values_instance, show=False)
+        plt.savefig(f"{label.lower()}_patient.png", bbox_inches="tight", dpi=300)
+        plt.close()
+
+        # Calculate final log-odds and probability
+        final_log_odds = shap_values_instance.base_values + shap_values_instance.values.sum()
+        final_prob = 1 / (1 + np.exp(-final_log_odds))
+
+        # Identify the top 10 features contributing to the prediction
+        sorted_features = sorted(
+            zip(instance.columns, instance.iloc[0], shap_values_instance.values),
+            key=lambda x: abs(x[2]), reverse=True
+        )[:5]
+
+        # Generate textual explanation
+        shap_text = f"Prediction for {label}:\n"
+        shap_text += f"Base value (expected prediction): {explainer.expected_value[1]:.3f}\n"
+        shap_text += f"Final prediction (log-odds): {final_log_odds:.3f}\n"
+        shap_text += f"Final probability: {final_prob:.3f}\n\n"
+        shap_text += "Top 5 Feature Contributions:\n"
+        for feature, value, contrib in sorted_features:
+            shap_text += f"- {feature}: {value} (contribution: {contrib:.3f})\n"
+        shap_text += "\n"
+
+        return shap_text, final_prob
+
+        # Compute SHAP explanations for the death prediction model
+        explainer_death = shap.TreeExplainer(death_model)
+        death_shap_text, death_prob = get_shap_explanation(explainer_death, patient_data, "Death")
+
+        # Compute SHAP explanations for the progressive disease prediction model
+        explainer_prog = shap.TreeExplainer(prog_model)
+        prog_shap_text, prog_prob = get_shap_explanation(explainer_prog, patient_data, "Progressive Disease")
+
+        # Save combined explanations to a text file
+        with open("prompt.txt", "w") as f:
+            f.write("SHAP Explanations for Single Patient\n")
+            f.write("=" * 50 + "\n\n")
+            f.write("Context:\n")
+            f.write(
+                "You are tasked with explaining the results of two machine learning models used to predict "
+                "the likelihood of death and progressive disease in a patient with pulmonary fibrosis. Below "
+                "are the SHAP-based explanations for the predictions, including probabilities and the top 10 "
+                "contributing features for each model. Provide a concise, medically relevant summary of these "
+                "results for healthcare professionals.\n\n"
+            )
+            f.write("Note:\n")
+            f.write(
+                "While these predictions are informative, they may not always be accurate. It is important to "
+                "consult a healthcare professional for a comprehensive evaluation. If the probability of death is "
+                "very high, this should be taken into account as a significant risk factor requiring immediate attention.\n\n"
+            )
+            f.write("YOU MUST GIVE A VERY SHORT ANSWER ANALYZING JUST THE PREDICTIONS AND THE MOST IMPORTANT FEATURES.\n\n")
+            f.write(death_shap_text)
+            f.write(prog_shap_text)
+
+            print("SHAP explanations for Death and Progressive Disease saved as 'prompt.txt'.")
+
+            # Retrieve additional information using RAG
+            #if self.retriever:
         query = (
             f"Explain the death prediction ({death_prediction}) and prognosis ({progressive_prediction}) "
             f"considering the following SHAP explanations for the features: {', '.join(feature_names)}."
