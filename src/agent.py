@@ -19,7 +19,7 @@ load_dotenv()
 #serpapi_api_key = os.getenv("SERPAPI_API_KEY")
 
 class MedicalAgent:
-    def __init__(self, db_path, documents_path='./data/documents', latent=False):
+    def __init__(self, db_path, documents_path='./documents', latent=False):
         """
         Initializes the medical agent with an LLM, LightGBM models, a RAG system, and internet search capability.
 
@@ -59,16 +59,15 @@ class MedicalAgent:
 
         :return: Dictionary of LightGBM models.
         """
+        assert os.path.exists('data/models/death_model_y0.txt'), "El archivo death_model_y0.txt no existe."
+        assert os.path.exists('data/models/prog_model_y0.txt'), "El archivo prog_model_y0.txt no existe."
+
         models = {
-            'year0': [lgb.Booster(model_file='data/models/death_model_y0.txt'),lgb.Booster(model_file='data/models/prog_model_y0.txt')],
-            'year1': lgb.Booster(model_file='hypertension_model.txt'),
-            'year2': lgb.Booster(model_file='cancer_model.txt'),
-            'year0_latent': lgb.Booster(model_file='diabetes_model_latent.txt'),
-            'year1_latent': lgb.Booster(model_file='hypertension_model_latent.txt'),
-            'year2_latent': lgb.Booster(model_file='cancer_model_latent.txt')
+            'year0': [lgb.Booster(model_file='models/death_model_y0.txt'),lgb.Booster(model_file='models/prog_model_y0.txt')],
         }
 
         if self.year == 0 and self.latent == False:
+            print('.........................................................................................................')
             return models['year0']
 
     def _initialize_retriever(self, documents_path):
