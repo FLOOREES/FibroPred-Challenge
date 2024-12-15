@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Subir Archivo CSV</title>
+    <title>Upload CSV file</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
 
@@ -73,21 +73,21 @@
 <body>
     <header class="bg-primary text-white py-4">
         <div class="container text-center">
-            <h1 class="display-4">Subir Archivo CSV</h1>
-            <p class="lead">Carga un archivo CSV con los datos necesarios para su análisis.</p>
+            <h1 class="display-4">Upload CSV File</h1>
+            <p class="lead">Upload a CSV file with the necessary data for analysis.</p>
         </div>
     </header>
     <main>
         <div class="card shadow-lg" id="uploadCard">
             <div class="card-body">
-                <h2 class="card-title text-center">Selecciona tu archivo</h2>
+                <h2 class="card-title text-center">Select File</h2>
                 <form id="uploadForm" enctype="multipart/form-data">
                     <div class="mb-3">
-                        <label for="csvFile" class="form-label">Archivo CSV</label>
+                        <label for="csvFile" class="form-label">CSV File</label>
                         <input type="file" class="form-control" id="csvFile" name="csvFile" accept=".csv" required>
                     </div>
                     <div class="text-center">
-                        <button type="submit" class="btn btn-primary btn-lg">Subir Archivo</button>
+                        <button type="submit" class="btn btn-primary btn-lg">Upload File</button>
                     </div>
                 </form>
             </div>
@@ -101,13 +101,13 @@
         <!-- Overlay de carga -->
         <div id="loadingOverlay">
             <div class="spinner-border text-light" role="status">
-                <span class="visually-hidden">Cargando...</span>
+                <span class="visually-hidden">Loading...</span>
             </div>
             <div class="text-light mt-3">Processing...</div>
         </div>
     </main>
     <footer class="bg-light text-center py-3">
-        <p class="mb-0">© 2024 Diagnóstico de Fibrosis. Todos los derechos reservados.</p>
+        <p class="mb-0">© 2024 Fibrosis Diagnosis. All rights reserved.</p>
     </footer>
 
     <!-- Bootstrap JS Bundle -->

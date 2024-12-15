@@ -43,8 +43,8 @@ def create_app():
             file.save(filepath)  # Guarda el archivo en el servidor
 
             
-            agent = MedicalAgent(db_path=filepath, documents_path='documents',latent=False)
-            exp_dic = agent.explain_diagnosis()
+            # agent = MedicalAgent(db_path=filepath, documents_path='documents',latent=False)
+            # exp_dic = agent.explain_diagnosis()
 
             #print(exp_dic)
             l=[]
@@ -54,7 +54,7 @@ def create_app():
             l.append(exp_dic["additional_info"])
 
             # Ruta al archivo PNG en la carpeta `static`
-            plot_url = '/static/patient.png'
+            plot_url = '/static/plot-diagram.png'
 
             # Explicación de ejemplo
             explanation = l
@@ -75,10 +75,7 @@ def create_app():
         age = request.form.get('age', type=int)  # Age at Diagnosis
         fvc = request.form.get('fvc', type=float)  # FVC (%) at Diagnosis
         final_diagnosis = request.form.get('final_diagnosis', type=int)  # Final Diagnosis
-        pirfenidone = request.form.get('pirfenidone')  # Pirfenidone (Binaria: "si" o "no")
 
-        # Convertir el valor binario de Pirfenidone a 0 o 1
-        pirfenidone_binary = 1 if pirfenidone == "si" else 0
 
         # Guardar los datos en variables o procesarlos
         user_data = {
@@ -86,12 +83,8 @@ def create_app():
             'age': age,
             'fvc': fvc,
             'final_diagnosis': final_diagnosis,
-            'pirfenidone': pirfenidone_binary
         }
-
-        User = pd.DataFrame(user_data, index=[0]).to_csv('data/user_data.csv', index=False)
-
-        # upload User in csv format 
+        User = pd.DataFrame(user_data, index=[0])
         User.to_csv('uploads/latent_data.csv', index=False)
 
         agent = MedicalAgent(db_path='uploads/latent_data.csv', documents_path='./documents',latent=True)
@@ -100,7 +93,7 @@ def create_app():
         for key in exp_dic:
             l.append(exp_dic[key])
         # Ruta al archivo PNG en la carpeta `static`
-        plot_url = '/static/diagnosis_plot.png'
+        plot_url = '/static/plot-diagram.png'
 
         # Explicación de ejemplo
         explanation = l
