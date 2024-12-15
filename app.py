@@ -96,13 +96,13 @@ def create_app():
 
         print(exp_dic)
         
-        results_html = render_template(
-            'results.html', 
-            prediction=prediction, 
-            explanation=exp_dic
-        )
+        # results_html = render_template(
+        #     'results.html', 
+        #     prediction=prediction, 
+        #     explanation=exp_dic
+        # )
 
-        return results_html, 200
+        return None , 200
 
 
     return app
