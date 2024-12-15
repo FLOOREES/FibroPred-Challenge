@@ -42,33 +42,9 @@ def create_app():
             filepath = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
             file.save(filepath)  # Guarda el archivo en el servidor
 
-            # Ahora que tenemos el filepath, podemos inicializar el MedicalAgent
-            # Asumamos que el CSV subido es la base de datos del usuario para el agente
-            # Esto cargará los datos y modelos
-            agent = MedicalAgent(db_path=filepath, documents_path='./data/documents')
-
-            # Aquí podríamos extraer datos específicos del CSV para la predicción
-            # Suponiendo que el CSV tiene columnas esperadas por el modelo, por ejemplo:
-            # Digamos que la diabetes_model necesita ['age', 'bmi', 'blood_pressure', ...]
-            df = pd.read_csv(filepath)
             
-            # Esto es un ejemplo: ajusta las claves según las features que tu modelo espera
-            user_data = {}
-            # Supongamos que el CSV tiene columnas: 'age', 'bmi', 'blood_pressure'
-            # Tomamos la primera fila para el ejemplo
-            if not df.empty:
-                user_data = {
-                    'age': df.iloc[0]['age'],
-                    'bmi': df.iloc[0]['bmi'],
-                    'blood_pressure': df.iloc[0]['blood_pressure']
-                }
+            agent = MedicalAgent(db_path=filepath, documents_path='./data/documents',latent=False)
 
-            # Predecimos el diagnóstico usando el modelo 'diabetes_model' como ejemplo
-            # Asegúrate de que el modelo, las columnas, y el CSV estén alineados
-            prediction = agent.predict_diagnosis(user_data, 'diabetes_model')
-
-            # Obtenemos una explicación del diagnóstico
-            explanation = agent.explain_diagnosis(user_data, 'diabetes_model')
 
             # Pasamos el resultado al template results.html
             # results.html podría mostrar la predicción y parte de la explicación
@@ -78,6 +54,8 @@ def create_app():
                 explanation=explanation
             )
             return results_html, 200
+        
+        
         else:
             return "ERROR: El archivo debe ser un CSV.", 400
         
@@ -111,16 +89,16 @@ def create_app():
         User.to_csv('uploads/latent_data.csv', index=False)
         
 
-        
-        # Inicializar el agente médico
-        #agent = MedicalAgent(db_path='./data/db.csv', documents_path='./data/documents
+        agent = MedicalAgent(db_path='uploads/latent_data.csv', documents_path='./data/documents',latent=True)
 
-        # Aquí podrías procesar los datos con tu modelo
-        # Por ejemplo:
-        # prediction = agent.predict_diagnosis(user_data, 'diabetes_model')
 
-        # Renderizar una página de resultados o redirigir a otra ruta
-        return render_template('questionnaire_results.html', user_data=user_data)
+        results_html = render_template(
+            'results.html', 
+            prediction=prediction, 
+            explanation=explanation
+        )
+
+        return results_html, 200
 
 
     return app
