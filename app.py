@@ -44,6 +44,9 @@ def create_app():
 
             
             agent = MedicalAgent(db_path=filepath, documents_path='./data/documents',latent=False)
+            exp_dic = agent.explain_diagnosis()
+
+            print(exp_dic)
 
 
             # Pasamos el resultado al template results.html
