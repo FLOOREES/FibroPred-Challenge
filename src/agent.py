@@ -27,16 +27,18 @@ class MedicalAgent:
         :param documents_path: Path to the directory containing documents for the RAG system.
         """
         self.data = Data(db_path)
-        # Let's prove that the data is loaded correctly
-        print(self.data.dataMOd.head())
 
         self.llm = Ollama(model='llama3.2')
-        self.lightgbm_models = self._load_lightgbm_models()
+
+        self.models = self._load_models()
+
         self.retriever = self._initialize_retriever(documents_path) if documents_path else None
+
         self.search_tool = self._initialize_search_tool()
+
         self.agent = self._initialize_agent()
 
-    def _load_lightgbm_models(self):
+    def _load_models(self):
         """
         Loads LightGBM models from files.
 
