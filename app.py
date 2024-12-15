@@ -91,7 +91,7 @@ def create_app():
         # upload User in csv format 
         User.to_csv('uploads/latent_data.csv', index=False)
 
-        agent = MedicalAgent(db_path='uploads/latent_data.csv', documents_path='./data/documents',latent=True)
+        agent = MedicalAgent(db_path='uploads/latent_data.csv', documents_path='./documents',latent=True)
         exp_dic = agent.explain_diagnosis()
 
         print(exp_dic)
