@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, session
+from flask import Flask, render_template, request, session,flash, redirect, url_for
 import os
 
 file_dir = os.path.dirname(__file__)
@@ -36,8 +36,14 @@ def create_app():
             filepath = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
             file.save(filepath)  # Guarda el archivo en el servidor
 
-            # Aquí redirigimos al template de carga
-            return render_template('loading.html', filename=filepath)
+            # Leer el archivo CSV en un DataFrame
+            df = pd.read_csv(filepath)
+
+            # Obtener las primeras tres instancias como HTML
+            preview = df.head(3).to_html(classes='table table-striped table-bordered')
+
+            # Pasar los datos al template de carga
+            return render_template('loading.html', preview=preview)
         else:
             flash('El archivo debe ser un CSV.', 'danger')
             return redirect(url_for('upload_csv'))
