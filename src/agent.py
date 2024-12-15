@@ -3,25 +3,6 @@ from langchain.chains import RetrievalQA
 from langchain.vectorstores import FAISS
 from langchain.embeddings import OpenAIEmbeddings
 from langchain.document_loaders import DirectoryLoader, TextLoader
-import lightgbm as lgb
-import numpy as np
-import pandas as pd
-
-import shap
-from langchain.llms import Ollama
-from langchain.chains import RetrievalQA
-from langchain.vectorstores import FAISS
-from langchain.embeddings import OpenAIEmbeddings
-from langchain.document_loaders import DirectoryLoader, TextLoader
-import lightgbm as lgb
-import numpy as np
-import pandas as pd
-
-from langchain.llms import Ollama
-from langchain.chains import RetrievalQA
-from langchain.vectorstores import FAISS
-from langchain.embeddings import OpenAIEmbeddings
-from langchain.document_loaders import DirectoryLoader, TextLoader
 from langchain.tools import Tool
 from langchain.utilities import SerpAPIWrapper
 from langchain.agents import Tool, initialize_agent, AgentType
