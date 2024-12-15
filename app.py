@@ -43,14 +43,14 @@ def create_app():
             file.save(filepath)  # Guarda el archivo en el servidor
 
             
-            agent = MedicalAgent(db_path=filepath, documents_path='documents',latent=False)
-            exp_dic = agent.explain_diagnosis()
+            # agent = MedicalAgent(db_path=filepath, documents_path='documents',latent=False)
+            # exp_dic = agent.explain_diagnosis()
 
-            print(exp_dic)
+            # print(exp_dic)
 
 
             # Ruta al archivo PNG en la carpeta `static`
-            plot_url = '/static/patient.png'
+            plot_url = '/static/plot-diagram.png'
 
             # Explicación de ejemplo
             explanation = [
@@ -89,18 +89,17 @@ def create_app():
             'pirfenidone': pirfenidone_binary
         }
 
-        User = pd.DataFrame(user_data, index=[0]).to_csv('data/user_data.csv', index=False)
-
-        # upload User in csv format 
+        print(user_data)
+        User = pd.DataFrame(user_data, index=[0])
         User.to_csv('uploads/latent_data.csv', index=False)
 
-        agent = MedicalAgent(db_path='uploads/latent_data.csv', documents_path='./documents',latent=True)
-        exp_dic = agent.explain_diagnosis()
+        # agent = MedicalAgent(db_path='uploads/latent_data.csv', documents_path='./documents',latent=True)
+        # exp_dic = agent.explain_diagnosis()
 
-        print(exp_dic)
+        # print(exp_dic)
 
         # Ruta al archivo PNG en la carpeta `static`
-        plot_url = '/static/diagnosis_plot.png'
+        plot_url = '/static/plot-diagram.png'
 
         # Explicación de ejemplo
         explanation = [

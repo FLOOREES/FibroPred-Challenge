@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Resultados del Diagnóstico</title>
+    <title>Diagnosis Results</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
@@ -37,20 +37,20 @@
 <body>
     <header class="bg-primary text-white py-4">
         <div class="container text-center">
-            <h1 class="display-4">Resultados del Diagnóstico</h1>
-            <p class="lead">Aquí puedes visualizar tu diagnóstico y su explicación.</p>
+            <h1 class="display-4">Diagnosis Results</h1>
+            <p class="lead">Here you can view your diagnosis and its explanation.</p>
         </div>
     </header>
     <main class="container">
-        <!-- Contenedor del gráfico -->
+        <!-- Plot container -->
         <div class="plot-container">
-            <h3>Visualización del Diagnóstico</h3>
-            <img src="{{ plot_url }}" alt="Gráfico del diagnóstico" class="img-fluid rounded shadow">
+            <h3>Diagnosis Visualization</h3>
+            <img src="{{ plot_url }}" alt="Diagnosis Plot" class="img-fluid rounded shadow">
         </div>
 
-        <!-- Lista con la explicación -->
+        <!-- Explanation list -->
         <div class="explanation-container">
-            <h3>Explicación del Diagnóstico</h3>
+            <h3>Diagnosis Explanation</h3>
             <ul class="explanation-list">
                 {% for item in explanation %}
                 <li>{{ item }}</li>
@@ -58,11 +58,11 @@
             </ul>
         </div>
 
-        <!-- Botón para volver al inicio -->
-        <a href="/" class="btn btn-primary btn-lg btn-back">Volver al Inicio</a>
+        <!-- Button to return to home -->
+        <a href="/" class="btn btn-primary btn-lg btn-back">Return to Home</a>
     </main>
     <footer class="bg-light text-center py-3">
-        <p class="mb-0">© 2024 Diagnóstico de Fibrosis. Todos los derechos reservados.</p>
+        <p class="mb-0">© 2024 Fibrosis Diagnosis. All rights reserved.</p>
     </footer>
     <!-- Bootstrap JS Bundle -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
