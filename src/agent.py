@@ -152,6 +152,30 @@ class MedicalAgent:
         :param model_name: Name of the LightGBM model used for prediction.
         :return: Explanation of the diagnosis.
         """
+        death_shap_text, death_prob = self.get_shap_explanation(model='death', label="Death")
+        prog_shap_text, prog_prob = self.get_shap_explanation(model='prog', label="Progressive Disease")
+        prompt= "SHAP Explanations for Single Patient\n"
+        prompt+= "=" * 50 + "\n\n"
+        prompt+= "Context:\n"
+        prompt+= "You are tasked with explaining the results of two machine learning models used to predict the likelihood of death and progressive disease in a patient with pulmonary fibrosis. Below are the SHAP-based explanations for the predictions, including probabilities and the top 10 contributing features for each model. Provide a concise, medically relevant summary of these results for healthcare professionals.\n\n"
+        prompt+= "Note:\n"
+        prompt+= "While these predictions are informative, they may not always be accurate. It is important to consult a healthcare professional for a comprehensive evaluation. If the probability of death is very high, this should be taken into account as a significant risk factor requiring immediate attention.\n\n"
+        prompt+= "YOU MUST GIVE A VERY SHORT ANSWER ANALYZING JUST THE PREDICTIONS AND THE MOST IMPORTANT FEATURES.\n\n"
+        prompt+= death_shap_text
+        prompt+= prog_shap_text
+            # Retrieve additional information using RAG
+            #if self.retriever:
+        additional_info = self.answer_medical_question(prompt)
+
+        # Combine SHAP explanations and additional information into the output
+        explanation = {
+            'death_prediction': death_prob,
+            'prog_prediction': prog_prob,
+            'additional_info': additional_info
+        }
+
+        return explanation
+
         # Predict the diagnosis
         # death_prediction, progressive_prediction = self.predict_diagnosis()
 
@@ -241,54 +265,8 @@ class MedicalAgent:
 
         return shap_text, final_prob
 
-        # Compute SHAP explanations for the death prediction model
-        explainer_death = shap.TreeExplainer(death_model)
-        death_shap_text, death_prob = get_shap_explanation(explainer_death, patient_data, "Death")
 
-        # Compute SHAP explanations for the progressive disease prediction model
-        explainer_prog = shap.TreeExplainer(prog_model)
-        prog_shap_text, prog_prob = get_shap_explanation(explainer_prog, patient_data, "Progressive Disease")
-
-        # Save combined explanations to a text file
-        with open("prompt.txt", "w") as f:
-            f.write("SHAP Explanations for Single Patient\n")
-            f.write("=" * 50 + "\n\n")
-            f.write("Context:\n")
-            f.write(
-                "You are tasked with explaining the results of two machine learning models used to predict "
-                "the likelihood of death and progressive disease in a patient with pulmonary fibrosis. Below "
-                "are the SHAP-based explanations for the predictions, including probabilities and the top 10 "
-                "contributing features for each model. Provide a concise, medically relevant summary of these "
-                "results for healthcare professionals.\n\n"
-            )
-            f.write("Note:\n")
-            f.write(
-                "While these predictions are informative, they may not always be accurate. It is important to "
-                "consult a healthcare professional for a comprehensive evaluation. If the probability of death is "
-                "very high, this should be taken into account as a significant risk factor requiring immediate attention.\n\n"
-            )
-            f.write("YOU MUST GIVE A VERY SHORT ANSWER ANALYZING JUST THE PREDICTIONS AND THE MOST IMPORTANT FEATURES.\n\n")
-            f.write(death_shap_text)
-            f.write(prog_shap_text)
-
-            print("SHAP explanations for Death and Progressive Disease saved as 'prompt.txt'.")
-
-            # Retrieve additional information using RAG
-            #if self.retriever:
-        query = (
-            f"Explain the death prediction ({death_prediction}) and prognosis ({progressive_prediction}) "
-            f"considering the following SHAP explanations for the features: {', '.join(feature_names)}."
-        )
-        additional_info = self.answer_medical_question(query)
-
-        # Combine SHAP explanations and additional information into the output
-        explanation = {
-            'death_prediction': death_prediction,
-            'prog_prediction': progressive_prediction,
-            'death_shap_explanation': death_shap_explanation,
-            'prog_shap_explanation': prog_shap_explanation,
-            'additional_info': additional_info
-        }
+        # Save combined explanations to a text fil
 
         return explanation
 
