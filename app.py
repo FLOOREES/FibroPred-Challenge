@@ -113,7 +113,7 @@ def create_app():
 
         
         # Inicializar el agente médico
-        agent = MedicalAgent(db_path='./data/db.csv', documents_path='./data/documents
+        #agent = MedicalAgent(db_path='./data/db.csv', documents_path='./data/documents
 
         # Aquí podrías procesar los datos con tu modelo
         # Por ejemplo:
