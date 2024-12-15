@@ -93,7 +93,7 @@ def create_app():
         for key in exp_dic:
             l.append(exp_dic[key])
         # Ruta al archivo PNG en la carpeta `static`
-        plot_url = '/static/plot-diagram.png'
+        plot_url = '/src/death_patient.png'
 
         # Explicación de ejemplo
         explanation = l

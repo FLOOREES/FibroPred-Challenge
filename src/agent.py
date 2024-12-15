@@ -225,6 +225,8 @@ class MedicalAgent:
         Returns:
             tuple: SHAP explanation text and prediction probability.
         """
+        self.death_model = self.model[0]
+        self.prog_model = self.model[1]
         instance = self.data
         if model == "death":
             explainer = shap.TreeExplainer(self.death_model)
@@ -268,7 +270,6 @@ class MedicalAgent:
 
         # Save combined explanations to a text fil
 
-        return explanation
 
     def answer_medical_question(self, question):
         """
