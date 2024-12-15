@@ -28,7 +28,7 @@ class MedicalAgent:
         """
         self.data = Data(db_path)
 
-        self.year = self.get_year()
+        self.year = self._get_year()
 
         self.llm = Ollama(model='llama3.2')
 
@@ -40,7 +40,7 @@ class MedicalAgent:
 
         self.agent = self._initialize_agent()
 
-    def get_year(self):
+    def _get_year(self):
         """
         Determines the year based on the number of columns in the data.
 
