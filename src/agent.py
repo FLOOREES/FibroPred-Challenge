@@ -19,7 +19,7 @@ load_dotenv()
 #serpapi_api_key = os.getenv("SERPAPI_API_KEY")
 
 class MedicalAgent:
-    def __init__(self, db_path, documents_path='./data/documents'):
+    def __init__(self, db_path, documents_path='./data/documents', latent=False):
         """
         Initializes the medical agent with an LLM, LightGBM models, a RAG system, and internet search capability.
 
@@ -29,6 +29,8 @@ class MedicalAgent:
         self.data = Data(db_path)
 
         self.year = self._get_year()
+
+        self.latent = latent
 
         self.llm = Ollama(model='llama3.2')
 
@@ -46,7 +48,7 @@ class MedicalAgent:
 
         :return: None
         """
-        num_columns = self.data.shape[1]  # Assuming self.data is a DataFrame or similar structure
+        num_columns = self.data.shape[1] 
         if num_columns == 49:return 2
         elif num_columns == 48:return 1
         else:return 0
@@ -58,11 +60,16 @@ class MedicalAgent:
         :return: Dictionary of LightGBM models.
         """
         models = {
-            'diabetes_model': lgb.Booster(model_file='diabetes_model.txt'),
-            'hypertension_model': lgb.Booster(model_file='hypertension_model.txt')
-            # Add other models as needed
+            'year0': [lgb.Booster(model_file='data/models/death_model_y0.txt'),lgb.Booster(model_file='data/models/prog_model_y0.txt')],
+            'year1': lgb.Booster(model_file='hypertension_model.txt'),
+            'year2': lgb.Booster(model_file='cancer_model.txt'),
+            'year0_latent': lgb.Booster(model_file='diabetes_model_latent.txt'),
+            'year1_latent': lgb.Booster(model_file='hypertension_model_latent.txt'),
+            'year2_latent': lgb.Booster(model_file='cancer_model_latent.txt')
         }
-        return models
+
+        if self.year == 0 and self.latent == False:
+            return models['year0']
 
     def _initialize_retriever(self, documents_path):
         """
