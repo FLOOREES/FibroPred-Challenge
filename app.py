@@ -43,21 +43,21 @@ def create_app():
             file.save(filepath)  # Guarda el archivo en el servidor
 
             
-            # agent = MedicalAgent(db_path=filepath, documents_path='documents',latent=False)
-            # exp_dic = agent.explain_diagnosis()
+            agent = MedicalAgent(db_path=filepath, documents_path='documents',latent=False)
+            exp_dic = agent.explain_diagnosis()
 
-            # print(exp_dic)
-
+            print(exp_dic)
+            l=[]
+            l.append("Death Probability: " + str(exp_dic["death_prediction"]))
+            l.append("Progressive Desease Probability: " + str(exp_dic["prog_prediction"]))
+            l.append("EXPLANATION:")
+            l.append(exp_dic["additional_info"])
 
             # Ruta al archivo PNG en la carpeta `static`
             plot_url = '/static/plot-diagram.png'
 
             # Explicación de ejemplo
-            explanation = [
-                "El modelo predice un riesgo bajo de progresión en los próximos 5 años.",
-                "Los factores más influyentes fueron la edad y la FVC.",
-                "El valor de DLCO también contribuyó al pronóstico positivo."
-            ]
+            explanation = l
             
             return render_template('results.html', plot_url=plot_url, explanation=explanation)
             
@@ -87,20 +87,16 @@ def create_app():
         User = pd.DataFrame(user_data, index=[0])
         User.to_csv('uploads/latent_data.csv', index=False)
 
-        # agent = MedicalAgent(db_path='uploads/latent_data.csv', documents_path='./documents',latent=True)
-        # exp_dic = agent.explain_diagnosis()
-
-        # print(exp_dic)
-
+        agent = MedicalAgent(db_path='uploads/latent_data.csv', documents_path='./documents',latent=True)
+        exp_dic = agent.explain_diagnosis()
+        l=[]
+        for key in exp_dic:
+            l.append(exp_dic[key])
         # Ruta al archivo PNG en la carpeta `static`
         plot_url = '/static/plot-diagram.png'
 
         # Explicación de ejemplo
-        explanation = [
-            "El modelo predice un riesgo bajo de progresión en los próximos 5 años.",
-            "Los factores más influyentes fueron la edad y la FVC.",
-            "El valor de DLCO también contribuyó al pronóstico positivo."
-        ]
+        explanation = l
         
         return render_template('results.html', plot_url=plot_url, explanation=explanation)
 
