@@ -28,6 +28,8 @@ class MedicalAgent:
         """
         self.data = Data(db_path)
 
+        self.year = self._get_year()
+
         self.llm = Ollama(model='llama3.2')
 
         self.models = self._load_models()
@@ -37,6 +39,17 @@ class MedicalAgent:
         self.search_tool = self._initialize_search_tool()
 
         self.agent = self._initialize_agent()
+
+    def _get_year(self):
+        """
+        Determines the year based on the number of columns in the data.
+
+        :return: None
+        """
+        num_columns = self.data.shape[1]  # Assuming self.data is a DataFrame or similar structure
+        if num_columns == 49:return 2
+        elif num_columns == 48:return 1
+        else:return 0
 
     def _load_models(self):
         """
