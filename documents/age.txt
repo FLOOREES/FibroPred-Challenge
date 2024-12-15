@@ -1,0 +1,39 @@
+Idiopathic pulmonary fibrosis (IPF) is a progressive interstitial lung disease characterized by scarring of lung tissue, leading to a decline in respiratory function. Epidemiological data indicate a higher prevalence of IPF among men compared to women. In international cohorts, approximately 70% of IPF cases are male 
+
+. This male predominance has been consistently observed across various studies and populations.
+
+Clinical Presentation and Disease Progression
+
+At the time of diagnosis, women with IPF often present with less severe disease manifestations than men. A study from the French COhorte FIbrose (COFI) revealed that women had better baseline lung function, with a mean forced vital capacity (FVC) of 83.0% predicted compared to 75.4% in men 
+
+. Additionally, imaging studies showed that women were less likely to exhibit honeycombing (78.4% in women vs. 90.3% in men) and emphysema (11.8% in women vs. 25.9% in men) on high-resolution computed tomography (HRCT) scans.
+
+Despite these initial differences, disease progression and overall survival rates appear comparable between sexes. The COFI study reported median survival times of 31 months for women and 40 months for men, with no significant difference after adjusting for age and baseline FVC 
+
+. Similarly, a Swedish cohort study found no significant differences in quality of life or six-minute walk test results between men and women at presentation 
+BMC PULMONARY MEDICINE
+.
+
+Occupational and Environmental Exposures
+
+Men with IPF are more likely to have a history of smoking and occupational exposures to inhaled contaminants. In the COFI cohort, 62.7% of women were never-smokers compared to 21.1% of men. Furthermore, occupational exposures were reported in 13.7% of women versus 34.1% of men 
+
+. These differences in exposure histories may contribute to the observed variations in disease presentation between sexes.
+
+Comorbidities
+
+The prevalence of comorbid conditions differs between men and women with IPF. The Swedish IPF registry study reported that men had higher rates of coronary artery disease and other cardiovascular conditions compared to women 
+BMC PULMONARY MEDICINE
+. Conversely, women exhibited higher frequencies of osteoporosis and venous thromboembolic events 
+
+. These sex-specific comorbidity profiles may influence disease management and outcomes.
+
+Access to Lung Transplantation
+
+Notably, women with IPF have been found to have less access to lung transplantation compared to men. In the COFI study, only 1.96% of women underwent transplantation versus 10.8% of men 
+
+. The reasons for this disparity are not fully understood and warrant further investigation to ensure equitable access to advanced therapeutic options.
+
+Conclusion
+
+Sex differences in IPF encompass various aspects, including prevalence, clinical presentation, comorbidities, and access to treatment. While men are more frequently affected and present with more advanced disease, women tend to have better preserved lung function at diagnosis but face challenges such as reduced access to lung transplantation. Understanding these differences is crucial for tailoring management strategies and ensuring optimal care for all patients with IPF.

@@ -19,7 +19,7 @@ load_dotenv()
 #serpapi_api_key = os.getenv("SERPAPI_API_KEY")
 
 class MedicalAgent:
-    def __init__(self, db_path, documents_path='./data/documents', latent=False):
+    def __init__(self, db_path, documents_path='./documents', latent=False):
         """
         Initializes the medical agent with an LLM, LightGBM models, a RAG system, and internet search capability.
 
@@ -63,7 +63,7 @@ class MedicalAgent:
         assert os.path.exists('data/models/prog_model_y0.txt'), "El archivo prog_model_y0.txt no existe."
 
         models = {
-            'year0': [lgb.Booster(model_file='data/models/death_model_y0.txt'),lgb.Booster(model_file='data/models/prog_model_y0.txt')],
+            'year0': [lgb.Booster(model_file='models/death_model_y0.txt'),lgb.Booster(model_file='models/prog_model_y0.txt')],
         }
 
         if self.year == 0 and self.latent == False:
