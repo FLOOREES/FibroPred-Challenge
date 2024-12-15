@@ -65,7 +65,7 @@ def create_app():
 
             # Predecimos el diagnóstico usando el modelo 'diabetes_model' como ejemplo
             # Asegúrate de que el modelo, las columnas, y el CSV estén alineados
-            prediction = agent.predict_diagnosis(user_data, 'diabetes_model')
+            prediction = agent.predict_diagnosis()
 
             # Obtenemos una explicación del diagnóstico
             explanation = agent.explain_diagnosis(user_data, 'diabetes_model')
