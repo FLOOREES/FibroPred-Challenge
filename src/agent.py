@@ -1,19 +1,22 @@
-from langchain.llms import Ollama
+from langchain_community.llms import Ollama
 from langchain.chains import RetrievalQA
-from langchain.vectorstores import FAISS
-from langchain.embeddings import OpenAIEmbeddings
-from langchain.document_loaders import DirectoryLoader, TextLoader
-from langchain.tools import Tool
-from langchain.utilities import SerpAPIWrapper
+from langchain_community.vectorstores import FAISS
+from langchain_community.embeddings import OpenAIEmbeddings
+from langchain_community.document_loaders import DirectoryLoader, TextLoader
+from langchain_community.utilities import SerpAPIWrapper
 from langchain.agents import Tool, initialize_agent, AgentType
+from langchain_community.tools import DuckDuckGoSearchRun
 import lightgbm as lgb
 import numpy as np
 import pandas as pd
 import shap
 
+from dotenv import load_dotenv
 import os
 
-os.environ["SERPAPI_API_KEY"] = "your_serpapi_api_key"
+load_dotenv()
+
+#serpapi_api_key = os.getenv("SERPAPI_API_KEY")
 
 class MedicalAgent:
     def __init__(self, db_path, documents_path='./data/documents'):
@@ -24,6 +27,9 @@ class MedicalAgent:
         :param documents_path: Path to the directory containing documents for the RAG system.
         """
         self.data = Data(db_path)
+        # Let's prove that the data is loaded correctly
+        print(self.data.dataMOd.head())
+
         self.llm = Ollama(model='llama3.2')
         self.lightgbm_models = self._load_lightgbm_models()
         self.retriever = self._initialize_retriever(documents_path) if documents_path else None
@@ -68,12 +74,12 @@ class MedicalAgent:
 
     def _initialize_search_tool(self):
         """
-        Initializes the internet search tool using SerpAPI.
+        Initializes the internet search tool using DuckDuckGo.
         """
-        search = SerpAPIWrapper()
+        search = DuckDuckGoSearchRun()
         tool = Tool(
-            name="serpapi_search",
-            description="Search the internet for up-to-date information.",
+            name="duckduckgo_search",
+            description="Busca en internet información actualizada.",
             func=search.run,
         )
         return tool
