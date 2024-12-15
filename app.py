@@ -75,10 +75,7 @@ def create_app():
         age = request.form.get('age', type=int)  # Age at Diagnosis
         fvc = request.form.get('fvc', type=float)  # FVC (%) at Diagnosis
         final_diagnosis = request.form.get('final_diagnosis', type=int)  # Final Diagnosis
-        pirfenidone = request.form.get('pirfenidone')  # Pirfenidone (Binaria: "si" o "no")
 
-        # Convertir el valor binario de Pirfenidone a 0 o 1
-        pirfenidone_binary = 1 if pirfenidone == "si" else 0
 
         # Guardar los datos en variables o procesarlos
         user_data = {
@@ -86,10 +83,7 @@ def create_app():
             'age': age,
             'fvc': fvc,
             'final_diagnosis': final_diagnosis,
-            'pirfenidone': pirfenidone_binary
         }
-
-        print(user_data)
         User = pd.DataFrame(user_data, index=[0])
         User.to_csv('uploads/latent_data.csv', index=False)
 
